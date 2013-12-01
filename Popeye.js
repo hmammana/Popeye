@@ -6,6 +6,9 @@
      */
     var on = (window.addEventListener !== undefined) ? 'addEventListener' : 'attachEvent',
         off = (window.removeEventListener !== undefined) ? 'removeEventListener' : 'detachEvent',
+        scrollEvent = (on === 'attachEvent') ? 'onscroll' : 'scroll',
+        clickEvent = (on === 'attachEvent') ? 'onclick' : 'click',
+        loadEvent = (on === 'attachEvent') ? 'onload' : 'load',
         requestAnimFrame = (function () {
             return window.requestAnimationFrame ||
                 window.webkitRequestAnimationFrame ||
@@ -20,7 +23,7 @@
                 window.mozCancelAnimationFrame;
         }()),
         document = window.document,
-        animID,
+        rAFId,
         // http://gizma.com/easing/#quad3
         easeInOut = function (time, start, change, duration) {
             time /= duration / 2;
@@ -55,13 +58,13 @@
 
         this._configure();
 
-        document[on]('click', function (event) { that._click(event); }, false);
+        document[on](clickEvent, function (event) { that._click(event); }, false);
 
-        window[on]('scroll', function () { that._hashCurrentSection(); }, false);
+        window[on](scrollEvent, function () { that._hashCurrentSection(); }, false);
 
         // when page is scrolled bind goToSection to move automatically
         if (window.pageYOffset !== 0) {
-            window[on]('load', function () {  }, false);
+            window[on](loadEvent, function () {  }, false);
         }
 
     };
@@ -137,9 +140,9 @@
                 window.scrollBy(0, easeInOut(step, pageYOffset, move, duration) - window.pageYOffset);
 
                 if (step >= duration) {
-                    cancelAnimFrame(animID);
+                    cancelAnimFrame(rAFId);
                 } else {
-                    animID = requestAnimFrame(s);
+                    rAFId = requestAnimFrame(s);
                     step += 1;
                 }
             };
