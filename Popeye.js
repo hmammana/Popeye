@@ -60,7 +60,11 @@
 
         document[on](clickEvent, function (event) { that._click(event); }, false);
 
-        window[on](scrollEvent, function () { that._hashCurrentSection(); }, false);
+        window[on](scrollEvent, function () {
+            if (!that._animating) {
+                that._hashCurrentSection();
+            }
+        }, false);
 
         // when page is scrolled bind goToSection to move automatically
         if (window.pageYOffset !== 0) {
@@ -129,29 +133,33 @@
     Popeye.prototype._click = function (event) {
         event.preventDefault();
 
-        var target = event.target || event.srcElement,
+        var that = this,
+            target = event.target || event.srcElement,
             sectionName = target.getAttribute('data-Popeye'),
             move = 0,
             step = 0,
             pageYOffset,
-            duration = 20,
-            s = function () {
+            duration = 20;
 
-                window.scrollBy(0, easeInOut(step, pageYOffset, move, duration) - window.pageYOffset);
+        function s() {
 
-                if (step >= duration) {
-                    cancelAnimFrame(rAFId);
-                } else {
-                    rAFId = requestAnimFrame(s);
-                    step += 1;
-                }
-            };
+            window.scrollBy(0, easeInOut(step, pageYOffset, move, duration) - window.pageYOffset);
+
+            if (step >= duration) {
+                cancelAnimFrame(rAFId);
+                // search for History API
+                window.location.hash = '#!/' + sectionName;
+                that._animating = false;
+            } else {
+                rAFId = requestAnimFrame(s);
+                step += 1;
+            }
+        }
 
         if (target.nodeName === 'A' && sectionName !== undefined) {
-            // search for History API
-            window.location.hash = '#!/' + sectionName;
             pageYOffset = window.pageYOffset;
             move = this._sections[sectionName].offsetTop - pageYOffset;
+            this._animating = true;
             s();
         }
     };
