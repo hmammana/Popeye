@@ -1,53 +1,87 @@
 body {
-    font: 16px/1.4em helvetica, arial, sans-serif;
+    color: #161414;
+    font: 16px/1.4em 'Neucha', cursive;
     margin: 0;
 }
 
 .page-title {
+    background: url('assets/popeye-logo-120.png') no-repeat center center;
+    height: 130px;
     margin: 0;
     padding: 0;
     position: fixed;
-    top: 7px;
+    text-align: center;
+    text-indent: 100%;
+    top: 0;
     z-index: 2;
+    width: 100%;
+}
+
+.page-tagline {
+    background-color: #161414;
+    color: #fbc22e;
+    display: inline-block;
+    font-size: 14px;
+    padding: 0 10px;
+    position: relative;
+    text-indent: 0;
+    top: 90px;
+    width: auto;
 }
 
 .main-nav {
-    background-color: rgba(255, 255, 255, 1);
-    border-bottom: double 20px rgba(20, 48, 166, 1);
-    box-sizing: border-box;
-    height: 60px;
+    background: #fbc22e;
+    border-bottom: #fce7cd solid 1em;
+    height: 160px;
     position: fixed;
-    text-align: right;
+    text-align: center;
     top: 0;
     width: 100%;
     z-index: 1;
 }
 
 .main-nav-button {
-    background-color: rgba(247, 222, 16, 1);
-    border-radius: 100%;
-    box-shadow: -1px -1px 0 rgba(122, 110, 10, 1) inset,  3px 3px 0 rgba(242, 232, 147, 1) inset;
-    color: #ad9f2b;
+    background-color: #fce7cd;
+    border: solid 2px #fce7cd;
+    border-radius: 10px;
+    box-shadow: -2px -2px 0 #695f55 inset,  2px 2px 0 #695f55 inset, -1px -1px 0 #9d9186,  1px 1px 0 #9d9186;
+    color: #161414;
     display: inline-block;
-    font-size: 30px;
+    font-size: 1.3em;
     font-weight: bold;
-    height: 50px;
-    line-height: 50px;
-    margin-right: 10px;
+    margin-left: 10px;
+    padding: 10px;
     position: relative;
     text-align: center;
     text-decoration: none;
-    text-shadow: -1px -1px 0 rgba(122, 110, 10, 1);
-    top: 20px;
-    width: 50px;
+    top: 144px;
 }
 
-section { min-height: 400px; top: 51px; padding-top: 50px;}
+.main-nav-button:first-child {
+    margin-left: 0;
+}
 
-#s1 {  }
-#s2 {  }
-#s3 {  }
-#s4 {  }
-#s5 {  }
+section {
+    min-height: 400px;
+    top: 51px;
+    padding: 200px 10% 0 10%;
+}
+
+.section-title {
+    font-size: 2em;
+}
+
+#the-sailor-man {
+    background-color: #958e62;
+}
+
+#character-and-story {
+    background-color: #f99e65;
+}
+
+#theme-song {
+    background-color: #c23929;
+ }
+
 
 
