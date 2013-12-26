@@ -38,10 +38,11 @@
     /**
      * Create an animated navigation between anchors
      */
-    function Popeye(selector) {
+    function Popeye(options) {
 
         this._sections = {};
-        this._selector = selector;
+        this._selector = (typeof options === 'string') ? options : options.selector;
+        this._in = (options.in !== undefined) ? document.querySelector(options.in) : false;
 
         this._init();
 
@@ -54,13 +55,14 @@
      * @private
      */
     Popeye.prototype._init = function () {
-        var that = this;
+        var that = this,
+            scrolledArea =  this._in || window;
 
         this._configure();
 
         document[on](clickEvent, function (event) { that._click(event); }, false);
 
-        window[on](scrollEvent, function () {
+        scrolledArea[on](scrollEvent, function () {
             if (!that._animating) {
                 that._hashCurrentSection();
             }
@@ -85,7 +87,8 @@
             collectionLenght = collection.length,
             sectionName,
             sectionLink,
-            sectionOffset;
+            sectionOffset,
+            offsetTop;
 
         for (i = 0; collectionLenght > i; i += 1) {
             sectionLink = collection[i];
@@ -96,11 +99,12 @@
             sectionLink.setAttribute('data-Popeye', sectionName);
 
             // get the offsets
-            sectionOffset = document.getElementById(sectionName).getBoundingClientRect();
+            sectionOffset = document.getElementById(sectionName);
+            offsetTop = sectionOffset.offsetTop;
 
             this._sections[sectionName] = {
-                'offsetTop': sectionOffset.top,
-                'offsetBottom': sectionOffset.bottom
+                'offsetTop': offsetTop,
+                'offsetBottom': offsetTop + sectionOffset.offsetHeight
             };
 
         }
@@ -112,7 +116,7 @@
      * @private
      */
     Popeye.prototype._hashCurrentSection = function () {
-        var offset = window.pageYOffset,
+        var offset = ((this._in) ? (this._in.scrollTop  - this._in.offsetTop) : window.pageYOffset),
             sectionName,
             currentSection;
 
@@ -139,11 +143,17 @@
             move = 0,
             step = 0,
             pageYOffset,
-            duration = 20;
+            duration = 20,
+            gap;
 
         function s() {
+            gap = easeInOut(step, pageYOffset, move, duration) - ((that._in) ? that._in.scrollTop : window.pageYOffset);
 
-            window.scrollBy(0, easeInOut(step, pageYOffset, move, duration) - window.pageYOffset);
+            if (that._in) {
+                that._in.scrollTop += gap;
+            } else {
+                window.scrollBy(0, gap);
+            }
 
             if (step >= duration) {
                 cancelAnimFrame(rAFId);
@@ -157,7 +167,7 @@
         }
 
         if (target.nodeName === 'A' && sectionName !== undefined) {
-            pageYOffset = window.pageYOffset;
+            pageYOffset = (this._in) ? this._in.scrollTop : window.pageYOffset;
             move = this._sections[sectionName].offsetTop - pageYOffset;
             this._animating = true;
             s();

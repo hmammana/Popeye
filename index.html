@@ -4,48 +4,83 @@
 		<title>ScrollTo Demo</title>
 		<meta charset="utf-8" />
 		<style type="text/css">
-			section{ min-height: 400px; top: 51px; padding-top: 50px;}
-			nav { position:fixed; top: 0; width: 100%; height: 50px; background-color: rgba(40,40,40,.5); }
-			#s1 { background-color: #f00; }
-			#s2 { background-color: #ff0; }
-			#s3 { background-color: #f0f; }
-			#s4 { background-color: #0f0; }
-			#s5 { background-color: #0ff; }
 
 			body { position: relative; margin: 0; }
+			section{ min-height: 400px; position: relative;}
+			p, h1, h2, h3 {margin: 0;}
+			nav { z-index: 2;}
+
+			nav.popeye-default { position:fixed; top: 0; width: 100%; height: 50px; background-color: rgba(40,40,40,.5); }
+
+			#s1, #s1s1 { background-color: #f00; }
+			#s2, #s1s2 { background-color: #ff0; }
+			#s3, #s1s3 { background-color: #f0f; }
+			#s4, #s1s4 { background-color: #0f0; }
+			#s5, #s1s5 { background-color: #0ff; }
+
+			div.popeye-in-relative { height: 200px; margin: 50px auto 0 auto; overflow: auto; width: 200px; position: relative; border:solid 1px #000; }
+			div.popeye-in-relative section{ min-height: 200px; position: relative;}
+			nav.popeye-in-relative { position:fixed; right: 0; width: 100px; top: 100px; background-color: rgba(40,40,40,.5); }
+			nav.popeye-in-relative a { display: block; }
+
+
 
 
 
 		</style>
 		<!--script src="rAF.js"></script-->
 	</head>
-	<body class="s5">
-		<nav>
+	<body>
+		<nav class="popeye-default">
 			<a href="#s1">section 1</a>
 			<a href="#s2">section 2</a>
 			<a href="#s3">section 3</a>
 			<a href="#s4">section 4</a>
 			<a href="#s5">section 5</a>
 		</nav>
+		<nav class="popeye-in-relative">
+			<a href="#s1s1">section 1</a>
+			<a href="#s1s2">section 2</a>
+			<a href="#s1s3">section 3</a>
+			<a href="#s1s4">section 4</a>
+			<a href="#s1s5">section 5</a>
+		</nav>
 		<section id="s1">
-			<p>this is a p and <strong>this is a strong</strong></p>
-			<!--img src="http://cullogo.com/full/wallpapers-water-lighter-grass-green-light-nature-sunshine-trees-free-hd-2560x2048.jpg"-->
+			<h2>Section 1</h2>
+			<div class="popeye-in-relative">
+				<section id="s1s1">
+					<h3>Section 1</h3>
+				</section>
+				<section id="s1s2">
+					<h3>Section 2</h3>
+				</section>
+				<section id="s1s3">
+					<h3>Section 3</h3>
+				</section>
+				<section id="s1s4">
+					<h3>Section 4</h3>
+				</section>
+				<section id="s1s5">
+					<h3>Section 5</h3>
+				</section>
+		</div>
 		</section>
 		<section id="s2">
-			<p>this is a p and <strong>this is a strong</strong></p>
+			<h2>Section 3</h2>
 		</section>
 		<section id="s3">
-			<p>this is a p and <strong>this is a strong</strong></p>
+			<h2>Section 3</h2>
 		</section>
 		<section id="s4">
-			<p>this is a p and <strong>this is a strong</strong></p>
+			<h2>Section 4</h2>
 		</section>
 		<section id="s5">
-			<p>this is a p and <strong>this is a strong</strong></p>
+			<h2>Section 5</h2>
 		</section>
 		<script src="Popeye.js"></script>
 		<script>
-			var popeye = new Popeye('nav a');
+			var popeye = new Popeye('nav.popeye-default a');
+			var popeyeInside = new Popeye({'selector': 'nav.popeye-in-relative a', 'in': 'div.popeye-in-relative'});
 		</script>
 
 
