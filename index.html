@@ -18,14 +18,10 @@
 			#s4, #s1s4 { background-color: #0f0; }
 			#s5, #s1s5 { background-color: #0ff; }
 
-			div.popeye-in-relative { height: 200px; margin: 50px auto 0 auto; overflow: auto; width: 200px; position: relative; border:solid 1px #000; }
-			div.popeye-in-relative section{ min-height: 200px; position: relative;}
-			nav.popeye-in-relative { position:fixed; right: 0; width: 100px; top: 100px; background-color: rgba(40,40,40,.5); }
-			nav.popeye-in-relative a { display: block; }
-
-
-
-
+			div.popeye-within-relative { height: 200px; margin: 50px auto 0 auto; overflow: auto; width: 200px; position: relative; border:solid 1px #000; }
+			div.popeye-within-relative section{ min-height: 200px; position: relative;}
+			nav.popeye-within-relative { position:fixed; right: 0; width: 100px; top: 100px; background-color: rgba(40,40,40,.5); }
+			nav.popeye-within-relative a { display: block; }
 
 		</style>
 		<!--script src="rAF.js"></script-->
@@ -38,7 +34,7 @@
 			<a href="#s4">section 4</a>
 			<a href="#s5">section 5</a>
 		</nav>
-		<nav class="popeye-in-relative">
+		<nav class="popeye-within-relative">
 			<a href="#s1s1">section 1</a>
 			<a href="#s1s2">section 2</a>
 			<a href="#s1s3">section 3</a>
@@ -47,7 +43,7 @@
 		</nav>
 		<section id="s1">
 			<h2>Section 1</h2>
-			<div class="popeye-in-relative">
+			<div class="popeye-within-relative">
 				<section id="s1s1">
 					<h3>Section 1</h3>
 				</section>
@@ -80,7 +76,7 @@
 		<script src="Popeye.js"></script>
 		<script>
 			var popeye = new Popeye('nav.popeye-default a');
-			var popeyeInside = new Popeye({'selector': 'nav.popeye-in-relative a', 'in': 'div.popeye-in-relative'});
+			var popeyeInside = new Popeye({'navigate': 'nav.popeye-within-relative a', 'within': 'div.popeye-within-relative'});
 		</script>
 
 

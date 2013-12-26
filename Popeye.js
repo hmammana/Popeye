@@ -41,8 +41,8 @@
     function Popeye(options) {
 
         this._sections = {};
-        this._selector = (typeof options === 'string') ? options : options.selector;
-        this._in = (options.in !== undefined) ? document.querySelector(options.in) : false;
+        this._selector = (typeof options === 'string') ? options : options.navigate;
+        this._within = (options.within !== undefined) ? document.querySelector(options.within) : false;
 
         this._init();
 
@@ -56,7 +56,7 @@
      */
     Popeye.prototype._init = function () {
         var that = this,
-            scrolledArea =  this._in || window;
+            scrolledArea =  this._within || window;
 
         this._configure();
 
@@ -116,7 +116,7 @@
      * @private
      */
     Popeye.prototype._hashCurrentSection = function () {
-        var offset = ((this._in) ? (this._in.scrollTop  - this._in.offsetTop) : window.pageYOffset),
+        var offset = ((this._within) ? (this._within.scrollTop  - this._within.offsetTop) : window.pageYOffset),
             sectionName,
             currentSection;
 
@@ -147,10 +147,10 @@
             gap;
 
         function s() {
-            gap = easeInOut(step, pageYOffset, move, duration) - ((that._in) ? that._in.scrollTop : window.pageYOffset);
+            gap = easeInOut(step, pageYOffset, move, duration) - ((that._within) ? that._within.scrollTop : window.pageYOffset);
 
-            if (that._in) {
-                that._in.scrollTop += gap;
+            if (that._within) {
+                that._within.scrollTop += gap;
             } else {
                 window.scrollBy(0, gap);
             }
@@ -167,7 +167,7 @@
         }
 
         if (target.nodeName === 'A' && sectionName !== undefined) {
-            pageYOffset = (this._in) ? this._in.scrollTop : window.pageYOffset;
+            pageYOffset = (this._within) ? this._within.scrollTop : window.pageYOffset;
             move = this._sections[sectionName].offsetTop - pageYOffset;
             this._animating = true;
             s();
