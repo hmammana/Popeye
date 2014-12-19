@@ -1,0 +1,23 @@
+{
+  "name": "Popeye",
+  "main": "Popeye.js",
+  "version": "0.1.0",
+  "homepage": "https://hmammana.github.io/Popeye",
+  "authors": [
+    "Hernan Mammana <hernanmammana@gmail.com>"
+  ],
+  "description": "an animated anchor navigation",
+  "keywords": [
+    "anchor",
+    "javascript",
+    "navigation"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
