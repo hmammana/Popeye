@@ -96,7 +96,7 @@
             // get the name
             sectionName = sectionLink.getAttribute('href').substring(1);
             // asign the name it will be used on click event
-            sectionLink.setAttribute('data-Popeye', sectionName);
+            sectionLink.setAttribute('data-popeye', sectionName);
 
             // get the offsets
             sectionOffset = document.getElementById(sectionName);
@@ -135,11 +135,10 @@
      * @private
      */
     Popeye.prototype._click = function (event) {
-        event.preventDefault();
 
         var that = this,
             target = event.target || event.srcElement,
-            sectionName = target.getAttribute('data-Popeye'),
+            sectionName = target.getAttribute('data-popeye'),
             move = 0,
             step = 0,
             pageYOffset,
@@ -167,6 +166,7 @@
         }
 
         if (target.nodeName === 'A' && sectionName !== null) {
+            event.preventDefault();
             pageYOffset = (this._within) ? this._within.scrollTop : window.pageYOffset;
             move = this._sections[sectionName].offsetTop - pageYOffset;
             this._animating = true;
