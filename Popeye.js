@@ -166,7 +166,7 @@
             }
         }
 
-        if (target.nodeName === 'A' && sectionName !== undefined) {
+        if (target.nodeName === 'A' && sectionName !== null) {
             pageYOffset = (this._within) ? this._within.scrollTop : window.pageYOffset;
             move = this._sections[sectionName].offsetTop - pageYOffset;
             this._animating = true;
