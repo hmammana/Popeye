@@ -145,6 +145,10 @@
             duration = 20,
             gap;
 
+        if (target.getAttribute('data-popeye') === null) {
+            return;
+        }
+
         function s() {
             gap = easeInOut(step, pageYOffset, move, duration) - ((that._within) ? that._within.scrollTop : window.pageYOffset);
 
@@ -165,7 +169,7 @@
             }
         }
 
-        if (target.nodeName === 'A' && sectionName !== null) {
+        if (target.nodeName === 'A' && sectionName !== null && this._sections[sectionName] !== undefined) {
             event.preventDefault();
             pageYOffset = (this._within) ? this._within.scrollTop : window.pageYOffset;
             move = this._sections[sectionName].offsetTop - pageYOffset;
