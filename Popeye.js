@@ -4,12 +4,7 @@
     /**
      * Module dependencies
      */
-    var on = (window.addEventListener !== undefined) ? 'addEventListener' : 'attachEvent',
-        off = (window.removeEventListener !== undefined) ? 'removeEventListener' : 'detachEvent',
-        scrollEvent = (on === 'attachEvent') ? 'onscroll' : 'scroll',
-        clickEvent = (on === 'attachEvent') ? 'onclick' : 'click',
-        loadEvent = (on === 'attachEvent') ? 'onload' : 'load',
-        requestAnimFrame = (function () {
+    var requestAnimFrame = (function () {
             return window.requestAnimationFrame ||
                 window.webkitRequestAnimationFrame ||
                 window.mozRequestAnimationFrame ||
@@ -32,7 +27,10 @@
             }
             time -= 1;
             return -change / 2 * (time * (time - 2) - 1) + start;
-        };
+        },
+        sections = {},
+        scrolling = false,
+        intervalId;
 
 
     /**
@@ -55,23 +53,46 @@
      * @private
      */
     Popeye.prototype._init = function () {
-        var that = this,
-            scrolledArea =  this._within || window;
+        var that = this;
+
+        this.container = this._within || window;
 
         this._configure();
 
-        document[on](clickEvent, function (event) { that._click(event); }, false);
+        document.addEventListener('click', function (event) { that._click(event); }, false);
 
-        scrolledArea[on](scrollEvent, function () {
+        this.container.addEventListener('scroll', function () {
+            scrolling = true;
+
+            (function () {
+                var intervalId = window.setInterval(function () {
+                    scrolling = false;
+                    window.clearInterval(intervalId);
+                }, 500);
+            }());
+
             if (!that._animating) {
                 that._hashCurrentSection();
             }
         }, false);
 
         // when page is scrolled bind goToSection to move automatically
-        if (window.pageYOffset !== 0) {
-            window[on](loadEvent, function () {  }, false);
-        }
+
+        window.addEventListener('load', function () {
+            var sectionName = window.location.hash;
+            that._onloadGoTo = sectionName.replace('#!/', '');
+            if (that._sections[that._onloadGoTo] && !that._within) {
+                that.moveTo(that._onloadGoTo);
+            }
+        }, false);
+
+        window.addEventListener('popstate', function(){
+            var sectionName = window.location.hash,
+                sectionName = sectionName.replace('#!/', '');
+            if (that._sections[sectionName] && !scrolling) {
+                that.moveTo(sectionName);
+            }
+        }, false);
 
     };
 
@@ -107,6 +128,8 @@
                 'offsetBottom': offsetTop + sectionOffset.offsetHeight
             };
 
+            sections[sectionName] = this._sections[sectionName];
+
         }
 
     };
@@ -116,7 +139,7 @@
      * @private
      */
     Popeye.prototype._hashCurrentSection = function () {
-        var offset = ((this._within) ? (this._within.scrollTop  - this._within.offsetTop) : window.pageYOffset),
+        var offset = ((this._within) ? (this.container.scrollTop  - this.container.offsetTop) : window.pageYOffset),
             sectionName,
             currentSection;
 
@@ -128,6 +151,41 @@
                 break;
             }
         }
+    };
+
+    Popeye.prototype.moveTo = function (sectionName) {
+        var that = this,
+            move = 0,
+            step = 0,
+            pageYOffset,
+            duration = 20,
+            gap;
+
+        function s() {
+            gap = easeInOut(step, pageYOffset, move, duration) - ((that._within) ? that.container.scrollTop : window.pageYOffset);
+
+            if (that._within) {
+                that._within.scrollTop += gap;
+            } else {
+                window.scrollBy(0, gap);
+            }
+
+            if (step >= duration) {
+                cancelAnimFrame(rAFId);
+                // search for History API
+                // callback or event
+                window.location.hash = '#!/' + sectionName;
+                that._animating = false;
+            } else {
+                rAFId = requestAnimFrame(s);
+                step += 1;
+            }
+        }
+
+        pageYOffset = (this._within) ? this._within.scrollTop : window.pageYOffset;
+        move = this._sections[sectionName].offsetTop - pageYOffset;
+        this._animating = true;
+        s();
     };
 
     /**
@@ -149,33 +207,11 @@
             return;
         }
 
-        function s() {
-            gap = easeInOut(step, pageYOffset, move, duration) - ((that._within) ? that._within.scrollTop : window.pageYOffset);
-
-            if (that._within) {
-                that._within.scrollTop += gap;
-            } else {
-                window.scrollBy(0, gap);
-            }
-
-            if (step >= duration) {
-                cancelAnimFrame(rAFId);
-                // search for History API
-                window.location.hash = '#!/' + sectionName;
-                that._animating = false;
-            } else {
-                rAFId = requestAnimFrame(s);
-                step += 1;
-            }
-        }
-
         if (target.nodeName === 'A' && sectionName !== null && this._sections[sectionName] !== undefined) {
             event.preventDefault();
-            pageYOffset = (this._within) ? this._within.scrollTop : window.pageYOffset;
-            move = this._sections[sectionName].offsetTop - pageYOffset;
-            this._animating = true;
-            s();
-        }
+            this.moveTo(sectionName);
+        };
+
     };
 
     // dont export direct to the window
